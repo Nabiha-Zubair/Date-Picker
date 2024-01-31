@@ -1,4 +1,4 @@
-const months31 = [1, 3, 5, 7, 8, 10, 12];
+const months31 = [0, 2, 4, 6, 7, 9, 11];
 
 export const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -16,6 +16,8 @@ export const CALENDAR_MONTHS = [
   "November",
   "December",
 ];
+
+export const currentDate = new Date();
 
 export const isLeapYear = (year) => {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
@@ -58,3 +60,9 @@ const startYear = 1899;
 const endYear = 2024;
 
 export const CALENDAR_YEARS = getAllYearsInRange(startYear, endYear);
+
+export const checkBusinessDay = (currentDate) => {
+  const day = currentDate.getDay();
+  if (day > 0 && day < 6) return true;
+  return false;
+};

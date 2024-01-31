@@ -6,12 +6,12 @@ export default function MonthSelector({ currentMonth, setCurrentMonth }) {
     setCurrentMonth(parseInt(e.target.value, 10));
   };
   return (
-    <div className="flex text-center items-center justify-center m-3">
+    <div className="flex text-center items-center justify-center m-1">
       <select
         id="months"
         value={currentMonth}
         onChange={handleMonthChange}
-        className="text-gray-700 font-bold"
+        className="bg-transparent text-gray-300 font-bold"
       >
         {CALENDAR_MONTHS.map((month, index) => (
           <option key={index} value={index}>
