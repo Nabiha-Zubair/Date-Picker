@@ -66,3 +66,33 @@ export const checkBusinessDay = (currentDate) => {
   if (day > 0 && day < 6) return true;
   return false;
 };
+
+export const dateFormatter = (date) => {
+  // const newDate = date.toLocaleDateString({
+  //   weekday: "short",
+  //   month: "short",
+  //   day: "numeric",
+  //   year: "numeric",
+  // });
+
+  const newDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    0,
+    0,
+    0,
+    0
+  );
+  return newDate;
+};
+
+export const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  return formattedDate;
+};
