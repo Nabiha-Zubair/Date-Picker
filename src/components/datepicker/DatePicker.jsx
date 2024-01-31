@@ -10,7 +10,7 @@ export default function DatePicker() {
   const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
 
   return (
-    <div className=" h-screen w-full flex flex-col items-center justify-center bg-[#242425]">
+    <div className="h-screen w-screen bg-[#242425] flex flex-col items-center justify-center p-5">
       <YearSelector currentYear={currentYear} setCurrentYear={setCurrentYear} />
       <MonthSelector
         currentMonth={currentMonth}

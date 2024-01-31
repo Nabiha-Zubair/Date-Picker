@@ -6,8 +6,6 @@ import {
   checkBusinessDay,
 } from "../../helpers/utils";
 
-import Day from "./Day";
-
 export default function Calendar({ currentYear, currentMonth }) {
   const [calendarDays, setCalendarDays] = useState([]);
   const [dateObjects, setDateObj] = useState([]);
@@ -68,7 +66,6 @@ export default function Calendar({ currentYear, currentMonth }) {
           >
             {day > 0 ? day : ""}
           </button>
-          // <Day key={day} day={day} index={index} dateObjects={dateObjects} />
         ))}
       </div>
 

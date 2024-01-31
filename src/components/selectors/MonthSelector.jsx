@@ -11,7 +11,7 @@ export default function MonthSelector({ currentMonth, setCurrentMonth }) {
         id="months"
         value={currentMonth}
         onChange={handleMonthChange}
-        className="bg-transparent text-gray-300 font-bold"
+        className="bg-transparent text-gray-200 font-bold"
       >
         {CALENDAR_MONTHS.map((month, index) => (
           <option key={index} value={index}>

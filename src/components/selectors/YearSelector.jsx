@@ -11,7 +11,7 @@ export default function YearSelector({ currentYear, setCurrentYear }) {
         id="year"
         value={currentYear}
         onChange={handleYearChange}
-        className="text-xl font-bold bg-transparent text-white"
+        className="text-3xl font-bold bg-transparent text-white"
       >
         {CALENDAR_YEARS.map((year) => (
           <option key={year} value={year}>
