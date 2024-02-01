@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
   DAYS_OF_WEEK,
-  getDaysInMonth,
-  firstDayOfWeek,
   calculateRanges,
+  calculateDays,
 } from "../../helpers/utils";
 import Day from "./Day";
+import PredefinedRanges from "./PredefinedRanges";
 import {
   alignToEndClass,
   calculateButtonClass,
@@ -21,54 +21,25 @@ export default function Calendar({ currentYear, currentMonth }) {
   const [businessRange, setBusinessRange] = useState([]);
 
   const predefinedRanges = [
+    { label: "Yesterday", days: 1 },
     { label: "Last 7 days", days: 7 },
     { label: "Last 30 days", days: 30 },
-    // Add more predefined ranges as needed
   ];
 
   useEffect(() => {
-    const totalDaysInCalendar = getDaysInMonth(currentYear, currentMonth);
-    const firstDay = firstDayOfWeek(currentYear, currentMonth);
-    const extraDays = firstDay % 7;
-    const days = Array.from(
-      {
-        length: totalDaysInCalendar + extraDays || 0,
-      },
-      (_, index) => index - firstDayOfWeek(currentYear, currentMonth) + 1
-    );
-    const monthDays = days.map(
-      (day) => new Date(currentYear, currentMonth, day)
-    );
-    setDateObj(monthDays);
-    setCalendarDays(days);
+    calculateDays({ currentYear, currentMonth, setDateObj, setCalendarDays });
   }, [currentMonth, currentYear]);
-
-  const handlePredefinedRanges = (days) => {
-    const today = Date.now();
-    const daysRange = days * 24 * 60 * 60 * 1000;
-    const previousDate = new Date(today - daysRange);
-    //  initialDate.setDate();
-
-    setStartDate(previousDate);
-    setEndDate(new Date(today));
-    calculateRanges(previousDate, new Date(today));
-  };
 
   return (
     <div className="mx-auto max-w-screen-md mt-8 p-5">
-      <div className="flex flex-row ">
-        <div className="flex flex-col  mx-3">
-          {/* {predefinedRanges.map((range, index) => (
-            <button
-              className="p-2 bg-transparent text-underline text-blue-300"
-              key={`${range.days}-${index}`}
-              // onClick={() => handlePredefinedRanges(range.days)}
-            >
-              {range.label}
-            </button>
-          ))} */}
-        </div>
-
+      <div className="flex flex-col md:flex-row ">
+        <PredefinedRanges
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          predefinedRanges={predefinedRanges}
+          setBusinessRanges={setBusinessRange}
+          setWeekendRanges={setWeekendRange}
+        />
         <div>
           <div className="grid grid-cols-7 gap-4 mb-4">
             {DAYS_OF_WEEK.map((day) => (

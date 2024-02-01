@@ -111,3 +111,23 @@ export const calculateRanges = ({
   setBusinessRange(businessDays);
   setWeekendRange(weekends);
 };
+
+export const calculateDays = ({
+  currentYear,
+  currentMonth,
+  setDateObj,
+  setCalendarDays,
+}) => {
+  const totalDaysInCalendar = getDaysInMonth(currentYear, currentMonth);
+  const firstDay = firstDayOfWeek(currentYear, currentMonth);
+  const extraDays = firstDay % 7;
+  const days = Array.from(
+    {
+      length: totalDaysInCalendar + extraDays || 0,
+    },
+    (_, index) => index - firstDayOfWeek(currentYear, currentMonth) + 1
+  );
+  const monthDays = days.map((day) => new Date(currentYear, currentMonth, day));
+  setDateObj(monthDays);
+  setCalendarDays(days);
+};
