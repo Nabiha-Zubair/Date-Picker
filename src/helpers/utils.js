@@ -85,7 +85,7 @@ export const formatDate = (date) => {
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
 
-  const formattedDate = `${year}-${month}-${day}`;
+  const formattedDate = `${year}/${month}/${day}`;
 
   return formattedDate;
 };
@@ -100,7 +100,8 @@ export const calculateRanges = ({
   let businessDays = [];
   let currentDate = startDate;
 
-  while (currentDate <= endDate) {
+
+  while (currentDate < endDate) {
     if (checkBusinessDay(currentDate)) {
       businessDays.push(formatDate(currentDate));
     } else {
@@ -108,6 +109,7 @@ export const calculateRanges = ({
     }
     currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
   }
+
   setBusinessRange(businessDays);
   setWeekendRange(weekends);
 };

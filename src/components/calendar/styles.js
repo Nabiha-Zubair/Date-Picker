@@ -2,19 +2,26 @@ import { checkBusinessDay } from "../../helpers/utils";
 
 export const checkDateRange = (day, date, startDate, endDate) => {
   if (day <= 0) return false;
-  if (startDate?.getTime() === date?.getTime()) {
+  if (startDate === date) {
     return true;
-  } else if (startDate <= date && date <= (endDate || startDate)) {
+  } else if (startDate && endDate && startDate <= date && date <= endDate) {
     if (!checkBusinessDay(date)) {
       return false;
     }
     return true;
   }
-  return startDate <= date && date <= (endDate || startDate);
 };
 
+export const container = "mx-auto max-w-screen-md mt-8 p-5";
+
+export const calendarBox = "flex flex-col md:flex-row";
+
+export const calendarGrid = "grid grid-cols-7 gap-4 mb-4";
+
+export const calendarDateText = "text-center font-bold text-white";
+
 export const calculateButtonClass =
-  "rounded p-2 px-3 bg-blue-600 self-end justify-end text-white";
+  "rounded p-2 px-3 bg-blue-600 self-end text-white";
 
 export const alignToEndClass = "flex flex-col justify-end items-end";
 

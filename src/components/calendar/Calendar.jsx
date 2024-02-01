@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  DAYS_OF_WEEK,
-  calculateRanges,
-  calculateDays,
-} from "../../helpers/utils";
+
+import CalculateButton from "./CalculateButton";
 import Day from "./Day";
 import PredefinedRanges from "./PredefinedRanges";
-import {
-  alignToEndClass,
-  calculateButtonClass,
-  lightTextClass,
-} from "./styles";
+import { calculateDays, DAYS_OF_WEEK } from "../../helpers/utils";
+import { calendarBox, calendarDateText, calendarGrid, container } from "./styles";
 
 export default function Calendar({ currentYear, currentMonth }) {
   const [calendarDays, setCalendarDays] = useState([]);
@@ -21,7 +15,6 @@ export default function Calendar({ currentYear, currentMonth }) {
   const [businessRange, setBusinessRange] = useState([]);
 
   const predefinedRanges = [
-    { label: "Yesterday", days: 1 },
     { label: "Last 7 days", days: 7 },
     { label: "Last 30 days", days: 30 },
   ];
@@ -31,19 +24,19 @@ export default function Calendar({ currentYear, currentMonth }) {
   }, [currentMonth, currentYear]);
 
   return (
-    <div className="mx-auto max-w-screen-md mt-8 p-5">
-      <div className="flex flex-col md:flex-row ">
+    <div className={container}>
+      <div className={calendarBox}>
         <PredefinedRanges
           setStartDate={setStartDate}
           setEndDate={setEndDate}
           predefinedRanges={predefinedRanges}
-          setBusinessRanges={setBusinessRange}
-          setWeekendRanges={setWeekendRange}
+          setBusinessRange={setBusinessRange}
+          setWeekendRange={setWeekendRange}
         />
         <div>
-          <div className="grid grid-cols-7 gap-4 mb-4">
+          <div className={calendarGrid}>
             {DAYS_OF_WEEK.map((day) => (
-              <button key={day} className="text-center font-bold text-white">
+              <button key={day} className={calendarDateText}>
                 {day}
               </button>
             ))}
@@ -60,26 +53,14 @@ export default function Calendar({ currentYear, currentMonth }) {
           />
         </div>
       </div>
-      <div className={alignToEndClass}>
-        {endDate && (
-          <div className="my-2">
-            <button
-              className={calculateButtonClass}
-              onClick={() =>
-                calculateRanges({
-                  startDate,
-                  endDate,
-                  setBusinessRange,
-                  setWeekendRange,
-                })
-              }
-            >
-              Done
-            </button>
-            <p className={lightTextClass}>Weekends: ({weekendRange.length})</p>
-          </div>
-        )}
-      </div>
+      <CalculateButton
+        startDate={startDate}
+        endDate={endDate}
+        setBusinessRange={setBusinessRange}
+        setWeekendRange={setWeekendRange}
+        businessRange={businessRange}
+        weekendRange={weekendRange}
+      />
     </div>
   );
 }
