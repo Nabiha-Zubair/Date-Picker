@@ -3,8 +3,7 @@ import {
   DAYS_OF_WEEK,
   getDaysInMonth,
   firstDayOfWeek,
-  checkBusinessDay,
-  formatDate,
+  calculateRanges,
 } from "../../helpers/utils";
 import Day from "./Day";
 import {
@@ -37,29 +36,12 @@ export default function Calendar({ currentYear, currentMonth }) {
       },
       (_, index) => index - firstDayOfWeek(currentYear, currentMonth) + 1
     );
-    const monthDays = days
-      // .filter((day) => day > 0)
-      .map((day) => new Date(currentYear, currentMonth, day));
+    const monthDays = days.map(
+      (day) => new Date(currentYear, currentMonth, day)
+    );
     setDateObj(monthDays);
     setCalendarDays(days);
   }, [currentMonth, currentYear]);
-
-  const calculateRanges = () => {
-    let weekends = [];
-    let businessDays = [];
-    let currentDate = startDate;
-
-    while (currentDate <= endDate) {
-      if (checkBusinessDay(currentDate)) {
-        businessDays.push(formatDate(currentDate));
-      } else {
-        weekends.push(formatDate(currentDate));
-      }
-      currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
-    }
-    setBusinessRange(businessDays);
-    setWeekendRange(weekends);
-  };
 
   const handlePredefinedRanges = (days) => {
     const today = Date.now();
@@ -112,7 +94,14 @@ export default function Calendar({ currentYear, currentMonth }) {
           <div className="my-2">
             <button
               className={calculateButtonClass}
-              onClick={() => calculateRanges()}
+              onClick={() =>
+                calculateRanges({
+                  startDate,
+                  endDate,
+                  setBusinessRange,
+                  setWeekendRange,
+                })
+              }
             >
               Done
             </button>

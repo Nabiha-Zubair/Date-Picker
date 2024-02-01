@@ -68,7 +68,6 @@ export const checkBusinessDay = (currentDate) => {
 };
 
 export const dateFormatter = (date) => {
-
   const newDate = new Date(
     date.getFullYear(),
     date.getMonth(),
@@ -89,4 +88,26 @@ export const formatDate = (date) => {
   const formattedDate = `${year}-${month}-${day}`;
 
   return formattedDate;
+};
+
+export const calculateRanges = ({
+  startDate,
+  endDate,
+  setBusinessRange,
+  setWeekendRange,
+}) => {
+  let weekends = [];
+  let businessDays = [];
+  let currentDate = startDate;
+
+  while (currentDate <= endDate) {
+    if (checkBusinessDay(currentDate)) {
+      businessDays.push(formatDate(currentDate));
+    } else {
+      weekends.push(formatDate(currentDate));
+    }
+    currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
+  }
+  setBusinessRange(businessDays);
+  setWeekendRange(weekends);
 };
