@@ -68,12 +68,6 @@ export const checkBusinessDay = (currentDate) => {
 };
 
 export const dateFormatter = (date) => {
-  // const newDate = date.toLocaleDateString({
-  //   weekday: "short",
-  //   month: "short",
-  //   day: "numeric",
-  //   year: "numeric",
-  // });
 
   const newDate = new Date(
     date.getFullYear(),

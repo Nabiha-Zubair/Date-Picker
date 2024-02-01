@@ -4,9 +4,14 @@ import {
   getDaysInMonth,
   firstDayOfWeek,
   checkBusinessDay,
-  dateFormatter,
   formatDate,
 } from "../../helpers/utils";
+import Day from "./Day";
+import {
+  alignToEndClass,
+  calculateButtonClass,
+  lightTextClass,
+} from "./styles";
 
 export default function Calendar({ currentYear, currentMonth }) {
   const [calendarDays, setCalendarDays] = useState([]);
@@ -15,6 +20,12 @@ export default function Calendar({ currentYear, currentMonth }) {
   const [endDate, setEndDate] = useState(null);
   const [weekendRange, setWeekendRange] = useState([]);
   const [businessRange, setBusinessRange] = useState([]);
+
+  const predefinedRanges = [
+    { label: "Last 7 days", days: 7 },
+    { label: "Last 30 days", days: 30 },
+    // Add more predefined ranges as needed
+  ];
 
   useEffect(() => {
     const totalDaysInCalendar = getDaysInMonth(currentYear, currentMonth);
@@ -26,45 +37,12 @@ export default function Calendar({ currentYear, currentMonth }) {
       },
       (_, index) => index - firstDayOfWeek(currentYear, currentMonth) + 1
     );
-
-    for (let i = 0; i < days?.length; i++) {
-      setDateObj((prevData) => [
-        ...prevData,
-        dateFormatter(new Date(currentYear, currentMonth, days[i])),
-      ]);
-    }
+    const monthDays = days
+      // .filter((day) => day > 0)
+      .map((day) => new Date(currentYear, currentMonth, day));
+    setDateObj(monthDays);
     setCalendarDays(days);
   }, [currentMonth, currentYear]);
-
-  const handleDatesChange = (index) => {
-    const date = dateObjects[index];
-    if (startDate === date) {
-      setStartDate(null);
-    } else if (
-      (!startDate && checkBusinessDay(date)) ||
-      (startDate && endDate)
-    ) {
-      setStartDate(date);
-      setEndDate(null);
-      setWeekendRange([]);
-      setBusinessRange([]);
-    } else if (date > startDate && checkBusinessDay(date)) {
-      setEndDate(date);
-    }
-  };
-
-  const checkDateRange = (date) => {
-    if (startDate === date) {
-      return true;
-    } else if (startDate <= date && date <= (endDate || startDate)) {
-      if (!checkBusinessDay(date)) {
-        return false;
-      }
-      return true;
-    }
-
-    return startDate <= date && date <= (endDate || startDate);
-  };
 
   const calculateRanges = () => {
     let weekends = [];
@@ -77,53 +55,68 @@ export default function Calendar({ currentYear, currentMonth }) {
       } else {
         weekends.push(formatDate(currentDate));
       }
-
       currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
     }
-
     setBusinessRange(businessDays);
     setWeekendRange(weekends);
   };
 
+  const handlePredefinedRanges = (days) => {
+    const today = Date.now();
+    const daysRange = days * 24 * 60 * 60 * 1000;
+    const previousDate = new Date(today - daysRange);
+    //  initialDate.setDate();
+
+    setStartDate(previousDate);
+    setEndDate(new Date(today));
+    calculateRanges(previousDate, new Date(today));
+  };
+
   return (
     <div className="mx-auto max-w-screen-md mt-8 p-5">
-      <div className="grid grid-cols-7 gap-4 mb-4">
-        {DAYS_OF_WEEK.map((day) => (
-          <button key={day} className="text-center font-bold text-white">
-            {day}
-          </button>
-        ))}
-      </div>
-      <div className="grid grid-cols-7 gap-4">
-        {calendarDays?.map((day, index) => (
-          <button
-            key={index}
-            className={`text-center text-gray-300 p-1  ${
-              day <= 0 && "text-transparent"
-            }  ${checkDateRange(dateObjects[index]) && "bg-[#D13E63]"} 
-            ${
-              checkBusinessDay(dateObjects[index])
-                ? "text-gray-300"
-                : "text-gray-600"
-            }
-            rounded-full hover:bg-[#DF6E8A]`}
-            onClick={() => handleDatesChange(index)}
-          >
-            {day > 0 ? day : ""}
-          </button>
-        ))}
-      </div>
+      <div className="flex flex-row ">
+        <div className="flex flex-col  mx-3">
+          {/* {predefinedRanges.map((range, index) => (
+            <button
+              className="p-2 bg-transparent text-underline text-blue-300"
+              key={`${range.days}-${index}`}
+              // onClick={() => handlePredefinedRanges(range.days)}
+            >
+              {range.label}
+            </button>
+          ))} */}
+        </div>
 
-      <div className="flex flex-col justify-end items-end">
+        <div>
+          <div className="grid grid-cols-7 gap-4 mb-4">
+            {DAYS_OF_WEEK.map((day) => (
+              <button key={day} className="text-center font-bold text-white">
+                {day}
+              </button>
+            ))}
+          </div>
+          <Day
+            startDate={startDate}
+            endDate={endDate}
+            dateObjects={dateObjects}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+            calendarDays={calendarDays}
+            setBusinessRange={setBusinessRange}
+            setWeekendRange={setWeekendRange}
+          />
+        </div>
+      </div>
+      <div className={alignToEndClass}>
         {endDate && (
           <div className="my-2">
             <button
-              className="rounded p-2 px-3 bg-blue-600 self-end justify-end text-white"
+              className={calculateButtonClass}
               onClick={() => calculateRanges()}
             >
               Done
             </button>
-            <p className="text-gray-400">Weekends: ({weekendRange.length})</p>
+            <p className={lightTextClass}>Weekends: ({weekendRange.length})</p>
           </div>
         )}
       </div>
