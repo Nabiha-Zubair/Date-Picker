@@ -3,12 +3,12 @@ import { dateClass } from "./styles";
 import { checkBusinessDay } from "../../helpers/utils";
 
 export default function Day({
-  calendarDays,
-  dateObjects,
   startDate,
   endDate,
-  setEndDate,
+  dateObjects,
   setStartDate,
+  setEndDate,
+  calendarDays,
   setBusinessRange,
   setWeekendRange,
 }) {
@@ -28,7 +28,7 @@ export default function Day({
       (startDate && endDate)
     ) {
       handleDateSelections(date);
-    } else if (date > startDate && checkBusinessDay(date)) {
+    } else if (checkBusinessDay(date)) {
       setEndDate(date);
     }
   };

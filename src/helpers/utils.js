@@ -85,7 +85,7 @@ export const formatDate = (date) => {
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
 
-  const formattedDate = `${year}-${month}-${day}`;
+  const formattedDate = `${year}/${month}/${day}`;
 
   return formattedDate;
 };
@@ -100,7 +100,8 @@ export const calculateRanges = ({
   let businessDays = [];
   let currentDate = startDate;
 
-  while (currentDate <= endDate) {
+
+  while (currentDate < endDate) {
     if (checkBusinessDay(currentDate)) {
       businessDays.push(formatDate(currentDate));
     } else {
@@ -108,6 +109,27 @@ export const calculateRanges = ({
     }
     currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
   }
+
   setBusinessRange(businessDays);
   setWeekendRange(weekends);
+};
+
+export const calculateDays = ({
+  currentYear,
+  currentMonth,
+  setDateObj,
+  setCalendarDays,
+}) => {
+  const totalDaysInCalendar = getDaysInMonth(currentYear, currentMonth);
+  const firstDay = firstDayOfWeek(currentYear, currentMonth);
+  const extraDays = firstDay % 7;
+  const days = Array.from(
+    {
+      length: totalDaysInCalendar + extraDays || 0,
+    },
+    (_, index) => index - firstDayOfWeek(currentYear, currentMonth) + 1
+  );
+  const monthDays = days.map((day) => new Date(currentYear, currentMonth, day));
+  setDateObj(monthDays);
+  setCalendarDays(days);
 };
